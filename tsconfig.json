@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": false,
+    "lib": ["dom", "es2015"]
+  },
+  "files" :[
+    "server/main.ts",
+    "bin/nopack.ts",
+    "client/loader.ts",
+    "client/hook.ts",
+    "build/main.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "samples"
+  ]
+}
