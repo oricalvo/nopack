@@ -57,6 +57,19 @@
             .then(res => res.json());
     }
 
+    function loadSystemJS() {
+        if(window["SystemJS"]) {
+            //
+            //  SystemJS is already loaded
+            //  Probably the user just included SystemJS inside index.html
+            //  No need to load it again
+            //
+            return;
+        }
+
+        return loadScript("config.systemJSLocation");
+    }
+
     function loadSystemJSConfig(location) {
         return Promise.resolve().then(function() {
             if(location) {
@@ -109,7 +122,7 @@
             () => loadMiddlewareConfig(),
             (_config) => config = _config,
             () => validateConfig(config),
-            () => loadScript(config.systemJSLocation),
+            () => loadSystemJS(),
             () => loadSystemJSConfig(config.systemJSConfigLocation),
             () => loadScript(config.systemJSMiddlewareLocation),
             () => importMain(config.mainLocation),
