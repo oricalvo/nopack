@@ -30,13 +30,12 @@ export function reload(): Promise<Configuration> {
     function getSystemJSSrcLocation() {
         return fsHelpers.findFirst([
             "node_modules/systemjs/dist/system.src.js",
-            "node_modules/systemjs-server/node_modules/systemjs/dist/system.src.js"
         ]);
     }
 
     function getSystemJSMiddlewareLocation() {
         return fsHelpers.findFirst([
-            "node_modules/systemjs-server/client/hook.js",
+            "node_modules/nopack/client/hook.js",
         ]);
     }
 

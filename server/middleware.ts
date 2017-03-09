@@ -63,22 +63,22 @@ export function setup(app) {
     }
     logger.log("");
 
-    app.get("/", (req, res)=> {
-        logger.log("");
+    // app.get("/", (req, res)=> {
+    //     logger.log("");
+    //
+    //     const config = configurator.get();
+    //     fsHelpers.readFileContent(config.indexHtmlLocation).then(content => {
+    //         const detailsJSON = JSON.stringify(config);
+    //         const $ = cheerio.load(content);
+    //         $("body").append(`<script>var SystemJServerConfig = ${detailsJSON};</script>\n`);
+    //         $("body").append(`<script src="node_modules/systemjs-server/client/systemjs.server.js"></script>\n`);
+    //         res.write($.html());
+    //         res.end();
+    //     });
+    // });
 
-        const config = configurator.get();
-        fsHelpers.readFileContent(config.indexHtmlLocation).then(content => {
-            const detailsJSON = JSON.stringify(config);
-            const $ = cheerio.load(content);
-            $("body").append(`<script>var SystemJServerConfig = ${detailsJSON};</script>\n`);
-            $("body").append(`<script src="node_modules/systemjs-server/client/systemjs.server.js"></script>\n`);
-            res.write($.html());
-            res.end();
-        });
-    });
-
-    app.get("/systemjs/init", (req, res)=> {
-        logger.log("systemjs/init");
+    app.get("/nopack/config", (req, res)=> {
+        logger.log("nopack/config");
 
         configurator.reload().then(config => {
             res.json(config);
@@ -89,7 +89,7 @@ export function setup(app) {
         });
     });
 
-    app.get('/systemjs/locate', function(req, res) {
+    app.get('/nopack/locate', function(req, res) {
         logger.log("HTTP GET: " + req.url);
 
         const path = req.query.path;

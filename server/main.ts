@@ -1,8 +1,9 @@
 import * as configurator from "../core/configurator";
 import * as open2 from "open";
-import * as app from "../server/app";
 import {dirExists} from "../helpers/fs";
 import {logger} from "../core/logger";
+import * as express from "express";
+import * as middleware from "./middleware";
 
 validate()
     .then(runServer)
@@ -12,15 +13,28 @@ validate()
     });
 
 function validate() {
-    return dirExists("node_modules/systemjs-server").then(exists => {
+    return dirExists("node_modules/nopack").then(exists => {
         if (!exists) {
-            throw new Error("Local systemjs-server was not found. Please run 'npm install systemjs-server'");
+            throw new Error("Local nopack was not found. Please run 'npm install nopack'");
         }
     });
 }
 
-function runServer() {
-    app.run();
+export function runServer() {
+    configurator.reload().then(config => {
+        const app = express();
+
+        middleware.setup(app);
+
+        app.use(express.static(config.basePath));
+
+        app.listen(config.port, function () {
+            logger.log("nopack is running");
+            logger.log("   port: " + config.port);
+            logger.log("   serving static files from: " + config.basePath);
+            logger.log("");
+        });
+    });
 }
 
 function openBrowser() {

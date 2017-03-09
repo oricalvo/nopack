@@ -22,7 +22,7 @@
     });
 
     function resolveByServer(path) {
-        return fetch("systemjs/locate?path=" + path)
+        return fetch("nopack/locate?path=" + path)
             .then(res => res.json())
             .then(json => {
                 if(json.err) {

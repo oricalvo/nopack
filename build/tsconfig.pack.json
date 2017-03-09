@@ -9,7 +9,7 @@
   },
   "files" :[
     "../server/main.ts",
-    "../bin/sjs.ts",
+    "../bin/nopack.ts",
     "../client/loader.ts",
     "../client/hook.ts"
   ],

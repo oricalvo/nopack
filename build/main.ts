@@ -31,6 +31,7 @@ export async function pack() {
     await exec(path.resolve("node_modules/.bin/tsc") + " -p ./build/tsconfig.pack.json");
     await copyGlob("./build_tmp/**/*.js", "./package");
     await copyGlob("./build_tmp/**/*.d.ts", "./package");
+    await copyFile("./index.js", "./package/index.js");
     await copyFile("./package.json", "./package/package.json");
 }
 

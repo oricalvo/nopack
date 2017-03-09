@@ -3,7 +3,7 @@
 import * as fs from "fs";
 import * as path from "path";
 const cwd = process.cwd();
-const localMain = path.join(cwd, "node_modules/systemjs-server/server/main.js");
+const localMain = path.join(cwd, "node_modules/nopack/server/main.js");
 
 fileExists(localMain).then(exists => {
     if(exists) {

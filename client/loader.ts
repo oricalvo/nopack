@@ -53,7 +53,7 @@
     }
 
     function loadMiddlewareConfig() {
-        return fetch("systemjs/init")
+        return fetch("nopack/config")
             .then(res => res.json());
     }
 
