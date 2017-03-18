@@ -24,11 +24,11 @@ export function load(): Promise<Configuration> {
 }
 
 export function reload(): Promise<Configuration> {
+    logger.info("Reloading nopack configuration");
+
     if(!config) {
         config = defaults;
     }
-
-    logger.debug("Reloading configuration");
 
     function getSystemJSSrcLocation() {
         return fsHelpers.findFirst([

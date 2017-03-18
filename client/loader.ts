@@ -83,7 +83,7 @@
     function importMain(main) {
         if(!main) {
             console.log();
-            console.error("systemjs-server failed to detect main file to import");
+            console.error("nopack failed to detect main file to import");
             return;
         }
 
