@@ -24,7 +24,7 @@
     function resolveByServer(path) {
         return fetch("nopack/locate?path=" + path)
             .then(res => res.json())
-            .then(json => {
+            .then((json: any) => {
                 if(json.err) {
                     json.path = path;
                 }

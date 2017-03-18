@@ -1,3 +1,5 @@
+/// <reference path="../core/configurator.ts" />
+
 (function() {
     "use strict";
 
@@ -57,7 +59,7 @@
             .then(res => res.json());
     }
 
-    function loadSystemJS() {
+    function loadSystemJS(config) {
         if(window["SystemJS"]) {
             //
             //  SystemJS is already loaded
@@ -67,7 +69,7 @@
             return;
         }
 
-        return loadScript("config.systemJSLocation");
+        return loadScript(config.systemJSLocation);
     }
 
     function loadSystemJSConfig(location) {
@@ -94,7 +96,7 @@
             return;
         }
 
-        if(!config.systemJSMiddlewareLocation) {
+        if(!config.systemJSHookLocation) {
             console.error("Failed to detect systemjs.middleware.js location");
             return;
         }
@@ -106,30 +108,23 @@
             throw new Error("head element was not found");
         }
 
-        let config;
-        //let config = window["SystemJServerConfig"];
-        // if(!config) {
-        //     console.error("systemjs-server configuration was not found");
-        //     return;
-        // }
-        //
-        // if(!config.systemJSLocation) {
-        //     console.error("system.src.js was not found");
-        //     return;
-        // }
+        let config: Configuration;
 
         return sequence([
             () => loadMiddlewareConfig(),
             (_config) => config = _config,
             () => validateConfig(config),
-            () => loadSystemJS(),
+            () => loadSystemJS(config),
             () => loadSystemJSConfig(config.systemJSConfigLocation),
-            () => loadScript(config.systemJSMiddlewareLocation),
+            () => loadScript(config.systemJSHookLocation),
             () => importMain(config.mainLocation),
         ]);
     }
 
-    init();
+    document.addEventListener("DOMContentLoaded", function() {
+        init();
+    });
 })();
 
 declare function fetch(url: string): Promise<any>;
+

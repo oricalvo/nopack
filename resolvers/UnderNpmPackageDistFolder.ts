@@ -1,6 +1,6 @@
 import {IResolver} from "./resolver";
 import * as configurator from "../core/configurator";
-import {logger} from "../core/logger";
+import * as logger from "../core/logger";
 import {findFileWithExtensions} from "../helpers/fs";
 
 export class ResolverUnderNpmPackageDistFolder implements IResolver {
@@ -11,7 +11,7 @@ export class ResolverUnderNpmPackageDistFolder implements IResolver {
     resolve(fileName: string): Promise<string> {
         return Promise.resolve().then(() => {
             if(fileName.indexOf("/")!=-1) {
-                logger.log("SKIP underNpmPackageDistFolder lookup since " + fileName + " is not considered a file name");
+                logger.debug("SKIP underNpmPackageDistFolder lookup since " + fileName + " is not considered a file name");
                 return Promise.resolve("");
             }
 

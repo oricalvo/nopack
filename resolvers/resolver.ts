@@ -1,4 +1,4 @@
-import {logger} from "../core/logger";
+import * as logger from "../core/logger";
 import {or} from "../helpers/promise";
 
 export interface IResolver {
@@ -22,7 +22,7 @@ export class ResolverNull implements IResolver {
     }
 
     resolve(location: string) {
-        logger.log(location);
+        logger.debug(location);
 
         return Promise.resolve(location);
     }

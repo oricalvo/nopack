@@ -1,4 +1,4 @@
-import {logger} from "../core/logger";
+import * as logger from "../core/logger";
 import {or} from "./promise";
 import * as path from "path";
 import * as fs from "fs";
@@ -114,7 +114,7 @@ export function findFileWithExtensions(basePath: string, location: string, exten
 
 export function findFile(basePath: string, location: string) {
     const fullPath = path.join(basePath, location);
-    logger.log("    Search: " + fullPath);
+    logger.debug("    Search: " + fullPath);
 
     return fileExists(fullPath)
         .then(exists => {

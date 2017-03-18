@@ -9,9 +9,10 @@
   },
   "files" :[
     "../server/main.ts",
-    "../bin/nopack.ts",
     "../client/loader.ts",
-    "../client/hook.ts"
+    "../client/hook.ts",
+    "../cli/main.ts",
+    "../globals.d.ts"
   ],
   "exclude": [
     "node_modules",

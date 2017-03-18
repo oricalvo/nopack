@@ -1,31 +1,34 @@
 import * as fsHelpers from "../helpers/fs";
-import {logger} from "./logger";
+import * as logger from "./logger";
 import * as path from "path";
 
-export interface Configuration {
-    basePath: string,
-    defaultExtensions: string[],
-    port: number;
-    systemJSLocation: string,
-    systemJSConfigLocation: string,
-    systemJSMiddlewareLocation: string,
-    mainLocation: string,
-    indexHtmlLocation: string,
-}
-
-const config: Configuration = {
+const defaults: Configuration = {
     basePath: process.cwd(),
     defaultExtensions: ["", "js"],
     port: 3000,
     systemJSLocation: null,
     systemJSConfigLocation: null,
-    systemJSMiddlewareLocation: null,
+    systemJSHookLocation: null,
     mainLocation: null,
     indexHtmlLocation: null,
 };
 
+let config: Configuration = null;
+
+export function load(): Promise<Configuration> {
+    if(config) {
+        return Promise.resolve(config);
+    }
+
+    return reload();
+}
+
 export function reload(): Promise<Configuration> {
-    logger.log("Reloading configuration");
+    if(!config) {
+        config = defaults;
+    }
+
+    logger.debug("Reloading configuration");
 
     function getSystemJSSrcLocation() {
         return fsHelpers.findFirst([
@@ -33,7 +36,7 @@ export function reload(): Promise<Configuration> {
         ]);
     }
 
-    function getSystemJSMiddlewareLocation() {
+    function getSystemJSHookLocation() {
         return fsHelpers.findFirst([
             "node_modules/nopack/client/hook.js",
         ]);
@@ -62,13 +65,13 @@ export function reload(): Promise<Configuration> {
     return Promise.all([
         getSystemJSSrcLocation(),
         getSystemJSConfigLocation(),
-        getSystemJSMiddlewareLocation(),
+        getSystemJSHookLocation(),
         getMainLocation(),
         getIndexHtmlLocation(),
     ]).then(values => {
         config.systemJSLocation = values[0];
         config.systemJSConfigLocation = values[1];
-        config.systemJSMiddlewareLocation = values[2];
+        config.systemJSHookLocation = values[2];
         config.mainLocation = values[3];
         config.indexHtmlLocation = values[4];
         console.log("");
@@ -80,6 +83,10 @@ export function reload(): Promise<Configuration> {
 }
 
 export function get() : Configuration {
+    if(!config) {
+        throw new Error("Configuration was not loaded yet");
+    }
+
     return config;
 }
 
@@ -94,15 +101,15 @@ export function set(c: Configuration) {
 }
 
 export function dump() {
-    logger.log("Configuration");
-    logger.log("    basePath: " + config.basePath);
-    logger.log("    port: " + config.port);
-    logger.log("    defaultExtensions: " + config.defaultExtensions);
-    logger.log("    indexHtmlLocation: " + config.indexHtmlLocation);
-    logger.log("    mainLocation: " + config.mainLocation);
-    logger.log("    systemJSLocation: " + config.systemJSLocation);
-    logger.log("    systemJSConfigLocation: " + config.systemJSConfigLocation);
-    logger.log("");
+    logger.debug("Configuration");
+    logger.debug("    basePath: " + config.basePath);
+    logger.debug("    port: " + config.port);
+    logger.debug("    defaultExtensions: " + config.defaultExtensions);
+    logger.debug("    indexHtmlLocation: " + config.indexHtmlLocation);
+    logger.debug("    mainLocation: " + config.mainLocation);
+    logger.debug("    systemJSLocation: " + config.systemJSLocation);
+    logger.debug("    systemJSConfigLocation: " + config.systemJSConfigLocation);
+    logger.debug("");
 }
 
 export function fullPath(relPath) {

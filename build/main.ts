@@ -33,6 +33,8 @@ export async function pack() {
     await copyGlob("./build_tmp/**/*.d.ts", "./package");
     await copyFile("./index.js", "./package/index.js");
     await copyFile("./package.json", "./package/package.json");
+    await copyFile("./bin/nopack.js", "./package/bin/nopack.js");
+    await copyFile("./server/inject.html", "./package/server/inject.html");
 }
 
 export async function patch() {

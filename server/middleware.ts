@@ -1,5 +1,5 @@
-import {logger} from "../core/logger";
-const fs = require("fs");
+import * as logger from "../core/logger";
+import * as fs from "fs";
 import {
     ResolverCollection, ResolverUnderNpmPackageDistFolder, ResolverNpmPackage,
     ResolverSystemJSPlugin, ResolverDefaultExtensions, ResolverNull, ResolverUnderNodeModulesFolder
@@ -57,30 +57,16 @@ export function setup(app) {
         throw new Error("SystemJS middleware setup must receive a reference to an express application instance");
     }
 
-    logger.log("The following resolvers are installed");
+    logger.debug("The following resolvers are installed");
     for(let resolver of resolvers.resolvers) {
-        logger.log("    " + resolver.name);
+        logger.debug("    " + resolver.name);
     }
-    logger.log("");
-
-    // app.get("/", (req, res)=> {
-    //     logger.log("");
-    //
-    //     const config = configurator.get();
-    //     fsHelpers.readFileContent(config.indexHtmlLocation).then(content => {
-    //         const detailsJSON = JSON.stringify(config);
-    //         const $ = cheerio.load(content);
-    //         $("body").append(`<script>var SystemJServerConfig = ${detailsJSON};</script>\n`);
-    //         $("body").append(`<script src="node_modules/systemjs-server/client/systemjs.server.js"></script>\n`);
-    //         res.write($.html());
-    //         res.end();
-    //     });
-    // });
+    logger.debug("");
 
     app.get("/nopack/config", (req, res)=> {
-        logger.log("nopack/config");
+        logger.debug("nopack/config");
 
-        configurator.reload().then(config => {
+        configurator.load().then(config => {
             res.json(config);
         }).catch(err=> {
             res.status(500);
@@ -90,24 +76,21 @@ export function setup(app) {
     });
 
     app.get('/nopack/locate', function(req, res) {
-        logger.log("HTTP GET: " + req.url);
+        logger.debug("HTTP GET: " + req.url);
 
         const path = req.query.path;
-        logger.log("    Locate: " + path);
+        logger.debug("    Locate: " + path);
 
         resolvers.resolve(path)
             .then(path => {
-                logger.log("    Found: " + path);
-                logger.log("");
+                logger.info(path);
 
                 res.json({
                     path: path,
                 }).end();
             })
             .catch(function(err) {
-                console.error(err);
-                logger.log("");
-
+                logger.error(err);
                 res.json({
                     err: err,
                 }).end();
