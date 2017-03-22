@@ -3,7 +3,7 @@
 
     hook(SystemJS, "normalize", function (next) {
         return function (name, parentName) {
-            console.log("normalize", arguments);
+            //console.log("normalize", arguments);
 
             return next.apply(this, arguments).then(function (name) {
                 const parts = parseUrl(name);
@@ -17,7 +17,7 @@
                         name = buildUrl(parts);
                     }
 
-                    console.log("    ", name);
+                    //console.log("    ", name);
                     return name;
                 });
             });
