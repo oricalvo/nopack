@@ -69,7 +69,15 @@
             return;
         }
 
-        return loadScript(config.systemJSLocation);
+        return loadScript(config.systemJSLocation).then(function() {
+            SystemJS.config({
+                meta: {
+                    "*.html": {
+                        loader: "text"
+                    }
+                }
+            });
+        });
     }
 
     function loadSystemJSConfig(location) {

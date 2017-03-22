@@ -7,6 +7,8 @@ import * as logger from "../core/logger";
 let config: Configuration;
 let nobrowser: boolean = false;
 
+console.log("xxx");
+
 run();
 
 async function run() {

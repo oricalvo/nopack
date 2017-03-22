@@ -1,31 +1,54 @@
-(function() {
+(function () {
     "use strict";
 
-    hook(System, "locate", function (next) {
-        return function (load) {
-            return next.apply(this, arguments).then(function(address) {
-                const parts = parseUrl(address);
+    hook(SystemJS, "normalize", function (next) {
+        return function (name, parentName) {
+            console.log("normalize", arguments);
+
+            return next.apply(this, arguments).then(function (name) {
+                const parts = parseUrl(name);
                 if (!parts) {
-                    return address;
+                    return name;
                 }
 
                 return resolveByServer(parts.path).then(path => {
-                    if(path) {
+                    if (path) {
                         parts.path = path;
-                        address = buildUrl(parts);
+                        name = buildUrl(parts);
                     }
 
-                    return address;
+                    console.log("    ", name);
+                    return name;
                 });
             });
         }
     });
 
+    // hook(SystemJS, "locate", function (next) {
+    //     return function (load) {
+    //         return next.apply(this, arguments).then(function (address) {
+    //             const parts = parseUrl(address);
+    //             if (!parts) {
+    //                 return address;
+    //             }
+    //
+    //             return resolveByServer(parts.path).then(path => {
+    //                 if (path) {
+    //                     parts.path = path;
+    //                     address = buildUrl(parts);
+    //                 }
+    //
+    //                 return address;
+    //             });
+    //         });
+    //     }
+    // });
+
     function resolveByServer(path) {
         return fetch("nopack/locate?path=" + path)
             .then(res => res.json())
             .then((json: any) => {
-                if(json.err) {
+                if (json.err) {
                     json.path = path;
                 }
 
@@ -39,13 +62,13 @@
     function buildUrl(parts) {
         let url = "";
 
-        if(parts.base) {
+        if (parts.base) {
             url = parts.base;
         }
 
         url += parts.path;
 
-        if(parts.plugin) {
+        if (parts.plugin) {
             url += ("!" + parts.plugin);
         }
 
@@ -69,8 +92,8 @@
             return null;
         }
 
-        let end = url.indexOf("!", index+1);
-        if(end == -1) {
+        let end = url.indexOf("!", index + 1);
+        if (end == -1) {
             end = undefined;
         }
 
